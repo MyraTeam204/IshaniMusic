@@ -66,15 +66,20 @@ async def gen_thumb(videoid, user_id):
                     await f.close()
 
         try:
-            wxyz = await app.get_profile_photos(user_id)
-            wxy = await app.download_media(wxyz[0]['file_id'], file_name=f'{user_id}.jpg')
+            wxy = await app.download_media(
+                (await app.get_users(user_id)).photo.big_file_id,
+                file_name=f"{user_id}.jpg",
+            )
         except:
-            hehe = await app.get_profile_photos(app.id)
-            wxy = await app.download_media(hehe[0]['file_id'], file_name=f'{app.id}.jpg')
+            wxy = await app.download_media(
+                (await app.get_users(BOT_ID)).photo.big_file_id,
+                file_name=f"{BOT_ID}.jpg",
+            )
+
         xy = Image.open(wxy)
-        a = Image.new('L', [640, 640], 0)
+        a = Image.new("L", [640, 640], 0)
         b = ImageDraw.Draw(a)
-        b.pieslice([(0, 0), (640,640)], 0, 360, fill = 255, outline = "white")
+        b.pieslice([(0, 0), (640, 640)], 0, 360, fill=255, outline="white")
         c = np.array(xy)
         d = np.array(a)
         e = np.dstack((c, d))
@@ -167,8 +172,8 @@ async def gen_thumb(videoid, user_id):
         background.save(f"cache/{videoid}_{user_id}.png")
         return f"cache/{videoid}_{user_id}.png"
     except Exception as e:
-        print(e)
-        return YOUTUBE_IMG_URL
+        LOGGER.error(e)
+        return FAILED
 
 
 async def gen_qthumb(videoid, user_id):
@@ -206,15 +211,20 @@ async def gen_qthumb(videoid, user_id):
                     await f.close()
 
         try:
-            wxyz = await app.get_profile_photos(user_id)
-            wxy = await app.download_media(wxyz[0]['file_id'], file_name=f'{user_id}.jpg')
+            wxy = await app.download_media(
+                (await app.get_users(user_id)).photo.big_file_id,
+                file_name=f"{user_id}.jpg",
+            )
         except:
-            hehe = await app.get_profile_photos(app.id)
-            wxy = await app.download_media(hehe[0]['file_id'], file_name=f'{app.id}.jpg')
+            wxy = await app.download_media(
+                (await app.get_users(BOT_ID)).photo.big_file_id,
+                file_name=f"{BOT_ID}.jpg",
+            )
+
         xy = Image.open(wxy)
-        a = Image.new('L', [640, 640], 0)
+        a = Image.new("L", [640, 640], 0)
         b = ImageDraw.Draw(a)
-        b.pieslice([(0, 0), (640,640)], 0, 360, fill = 255, outline = "white")
+        b.pieslice([(0, 0), (640, 640)], 0, 360, fill=255, outline="white")
         c = np.array(xy)
         d = np.array(a)
         e = np.dstack((c, d))
@@ -305,9 +315,8 @@ async def gen_qthumb(videoid, user_id):
             os.remove(f"cache/thumb{videoid}.png")
         except:
             pass
-        file = f"cache/que{videoid}_{user_id}.png"
         background.save(f"cache/que{videoid}_{user_id}.png")
         return f"cache/que{videoid}_{user_id}.png"
     except Exception as e:
-        print(e)
-        return YOUTUBE_IMG_URL
+        LOGGER.error(e)
+        return FAILED
