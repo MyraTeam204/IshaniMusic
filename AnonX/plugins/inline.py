@@ -14,8 +14,11 @@ async def inline_query_handler(client, query):
     answers = []
     if text.strip() == "":
         try:
-            await client.answer_inline_query(
-                query.id, results=answer, cache_time=10
+            await app.answer_inline_query(
+                query.id,
+                results=answers,
+                switch_pm_text="ᴛʏᴘᴇ sᴏᴍᴇᴛʜɪɴɢ ᴛᴏ sᴇᴀʀᴄʜ ᴏɴ ʏᴏᴜᴛᴜʙᴇ...",
+                cache_time=10,
             )
         except:
             return
@@ -26,9 +29,7 @@ async def inline_query_handler(client, query):
             title = (result[x]["title"]).title()
             duration = result[x]["duration"]
             views = result[x]["viewCount"]["short"]
-            thumbnail = result[x]["thumbnails"][0]["url"].split("?")[
-                0
-            ]
+            thumbnail = result[x]["thumbnails"][0]["url"].split("?")[0]
             channellink = result[x]["channel"]["link"]
             channel = result[x]["channel"]["name"]
             link = result[x]["link"]
@@ -45,15 +46,14 @@ async def inline_query_handler(client, query):
                 ]
             )
             searched_text = f"""
-📌 **ᴛɪᴛʟᴇ:** [{title}]({link})
+✨ **ᴛɪᴛʟᴇ :** [{title}]({link})
 
-⏳ **ᴅᴜʀᴀᴛɪᴏɴ:** {duration} Mins
-👀 **ᴠɪᴇᴡs:** `{views}`
-⏰ **ᴩᴜʙʟɪsʜᴇᴅ ᴏɴ:** {published}
-🎥 **ᴄʜᴀɴɴᴇʟ:** {channel}
-📎 **ᴄʜᴀɴɴᴇʟ ʟɪɴᴋ:** [ᴠɪsɪᴛ ᴄʜᴀɴɴᴇʟ]({channellink})
+⏳ **ᴅᴜʀᴀᴛɪᴏɴ :** `{duration}`ᴍɪɴᴜᴛᴇs
+👀 **ᴠɪᴇᴡs :** `{views}`
+⏰ **ᴩᴜʙʟɪsʜᴇᴅ ᴏɴ :** {published}
+🎥 **ᴄʜᴀɴɴᴇʟ :** [{channel}]({channellink})
 
-💖 **sᴇᴀʀᴄʜ ᴩᴏᴡᴇʀᴇᴅ ʙʏ {MUSIC_BOT_NAME}**"""
+<u>💖 **sᴇᴀʀᴄʜ ᴩᴏᴡᴇʀᴇᴅ ʙʏ {BOT_NAME}**</u>"""
             answers.append(
                 InlineQueryResultPhoto(
                     photo_url=thumbnail,
@@ -65,8 +65,6 @@ async def inline_query_handler(client, query):
                 )
             )
         try:
-            return await client.answer_inline_query(
-                query.id, results=answers
-            )
+            return await app.answer_inline_query(query.id, results=answers)
         except:
             return
